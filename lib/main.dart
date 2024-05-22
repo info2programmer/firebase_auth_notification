@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sample_firebase_flutter/controller/auth_service.dart';
+import 'package:sample_firebase_flutter/controller/notification_service.dart';
 import 'firebase_options.dart';
 import 'package:sample_firebase_flutter/home_screen.dart';
 import 'package:sample_firebase_flutter/login_sceen.dart';
@@ -12,6 +13,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Init Firebase messaging
+  await PushNotifications.init();
+
+  // Init Local Notification
+  await PushNotifications.localNotiInit();
+
   runApp(const MyApp());
 }
 
