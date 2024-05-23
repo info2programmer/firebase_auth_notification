@@ -7,11 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sample_firebase_flutter/controller/auth_service.dart';
 import 'package:sample_firebase_flutter/controller/notification_service.dart';
-import 'package:sample_firebase_flutter/message_screen.dart';
-import 'firebase_options.dart';
-import 'package:sample_firebase_flutter/home_screen.dart';
-import 'package:sample_firebase_flutter/login_sceen.dart';
-import 'package:sample_firebase_flutter/signup_screen.dart';
+import 'package:sample_firebase_flutter/views/message_screen.dart';
+import 'views/firebase_options.dart';
+import 'package:sample_firebase_flutter/views/home_screen.dart';
+import 'package:sample_firebase_flutter/views/login_sceen.dart';
+import 'package:sample_firebase_flutter/views/signup_screen.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
