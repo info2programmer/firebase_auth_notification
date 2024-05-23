@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sample_firebase_flutter/controller/auth_service.dart';
+import 'package:sample_firebase_flutter/controller/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +10,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    PushNotifications.getDeviceToken();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

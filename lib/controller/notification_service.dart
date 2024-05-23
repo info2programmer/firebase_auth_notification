@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sample_firebase_flutter/controller/auth_service.dart';
+import 'package:sample_firebase_flutter/controller/crud_service.dart';
 import 'package:sample_firebase_flutter/main.dart';
 
 class PushNotifications {
@@ -17,10 +20,24 @@ class PushNotifications {
         provisional: false,
         carPlay: false,
         sound: true);
+  }
 
-    // Get the device fcm token
+  // Get the device fcm token
+  static Future getDeviceToken() async {
     final token = await _firebaseMessaging.getToken();
-    print("Device token is $token");
+    debugPrint("Device token is $token");
+
+    bool isUserLoggedIn = await AuthService.isLoggedIn();
+
+    if (isUserLoggedIn) {
+      await CRUDservice.saveUserToken(token!);
+    }
+
+    _firebaseMessaging.onTokenRefresh.listen((event) async {
+      if (isUserLoggedIn) {
+        await CRUDservice.saveUserToken(token!);
+      }
+    });
   }
 
   // Init local notification
