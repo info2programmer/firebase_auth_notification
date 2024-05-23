@@ -1,12 +1,25 @@
+import 'dart:convert';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sample_firebase_flutter/controller/auth_service.dart';
 import 'package:sample_firebase_flutter/controller/notification_service.dart';
+import 'package:sample_firebase_flutter/message_screen.dart';
 import 'firebase_options.dart';
 import 'package:sample_firebase_flutter/home_screen.dart';
 import 'package:sample_firebase_flutter/login_sceen.dart';
 import 'package:sample_firebase_flutter/signup_screen.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("Some nOtification Recived in background!");
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +32,41 @@ void main() async {
 
   // Init Local Notification
   await PushNotifications.localNotiInit();
+
+  // Listen Background Notification
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+
+  // On background notification taaped
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      print("Background notification tapped");
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+    }
+  });
+
+  // To handel forground notification
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String payload = jsonEncode(message.data);
+    print("Got a message in Foreground");
+
+    if (message.notification != null) {
+      PushNotifications.showSimpleNotification(
+          title: message.notification!.title!,
+          body: message.notification!.body!,
+          payload: payload);
+    }
+  });
+
+  // To handel remote message
+  final RemoteMessage? message =
+      await FirebaseMessaging.instance.getInitialMessage();
+
+  if (message != null) {
+    print("Launched from terminated state");
+    Future.delayed(Duration(seconds: 1), () {
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+    });
+  }
 
   runApp(const MyApp());
 }
@@ -60,11 +108,13 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      navigatorKey: navigatorKey,
       routes: {
         "/": (context) => const CheckUser(),
         "/login-screen": (context) => const LoginScreen(),
         "/signup-screen": (context) => const SignupScreen(),
-        "/home-screen": (context) => const HomeScreen()
+        "/home-screen": (context) => const HomeScreen(),
+        "/message": (context) => const MessageScreen()
       },
     );
   }

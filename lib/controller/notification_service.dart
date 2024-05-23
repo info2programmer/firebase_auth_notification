@@ -1,8 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sample_firebase_flutter/main.dart';
 
 class PushNotifications {
   static final _firebaseMessaging = FirebaseMessaging.instance;
@@ -57,8 +55,8 @@ class PushNotifications {
 
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    // navigatorKey.currentState!
-    //     .pushNamed("/message", arguments: notificationResponse);
+    navigatorKey.currentState!
+        .pushNamed("/message", arguments: notificationResponse);
   }
 
   // show a simple notification
